@@ -6,19 +6,29 @@ public class SVGNode: SerializableElement {
     @Published public var transform: CGAffineTransform = CGAffineTransform.identity
     @Published public var opaque: Bool
     @Published public var opacity: Double
+    @Published public var fill: SVGPaint?
     @Published public var clip: SVGNode?
     @Published public var mask: SVGNode?
     @Published public var id: String?
 
     var gestures = [AnyGesture<()>]()
 
-    public init(transform: CGAffineTransform = .identity, opaque: Bool = true, opacity: Double = 1, clip: SVGNode? = nil, mask: SVGNode? = nil, id: String? = nil) {
+    public init(
+        transform: CGAffineTransform = .identity,
+        opaque: Bool = true,
+        opacity: Double = 1,
+        clip: SVGNode? = nil,
+        mask: SVGNode? = nil,
+        id: String? = nil,
+        fill: SVGPaint? = nil
+    ) {
         self.transform = transform
         self.opaque = opaque
         self.opacity = opacity
         self.clip = clip
         self.mask = mask
         self.id = id
+        self.fill = fill
     }
 
     public func bounds() -> CGRect {
@@ -53,6 +63,7 @@ public class SVGNode: SerializableElement {
         if !transform.isIdentity {
             serializer.add("transform", transform)
         }
+        fill?.serialize(key: "fill", serializer: serializer)
         serializer.add("opacity", opacity, 1)
         serializer.add("opaque", opaque, true)
         serializer.add("clip", clip).add("mask", mask)
